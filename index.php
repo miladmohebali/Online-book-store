@@ -17,13 +17,13 @@
     <!-- js -->
     <script>
         function CreateAccount() {
-          location.replace("create-account.html")
+          location.replace("create-account.php")
         }
         function SignIn() {
-          location.replace("sign-in.html")
+          location.replace("sign-in.php")
         }
         function Search() {
-          location.replace("search.html")
+          location.replace("search.php")
         }
     </script>
 

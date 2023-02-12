@@ -1,3 +1,36 @@
+<?php
+if(isset($_POST['submit'])) {
+  $email = $_POST['email'];
+  $password = $_POST['password'];
+  
+  // Add some basic validation here
+  if(  empty($email) || empty($password)) {
+    echo "All fields are required.";
+  } else {
+    // Connect to the database
+    $db = mysqli_connect('localhost', 'db_user', 'db_password', 'db_name');
+    
+    // Check if the email already exists
+    $check_email = "SELECT * FROM users WHERE email='$email'";
+    $result = mysqli_query($db, $check_email);
+    if(mysqli_num_rows($result) > 0) {
+      echo "This email already exists.";
+    } else {
+      // Encrypt the password before storing it
+      $encrypted_password = password_hash($password, PASSWORD_BCRYPT);
+      
+      // Add the user to the database
+      $insert_user = "INSERT INTO users ( email, password) VALUES ( '$email', '$encrypted_password')";
+      if(mysqli_query($db, $insert_user)) {
+        echo "Sign up successful.";
+      } else {
+        echo "Sign up failed.";
+      }
+    }
+  }
+}
+?>
+<!DOCTYPE html>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,13 +48,13 @@
     <!-- js -->
     <script>
         function Index() {
-          location.replace("index.html")
+          location.replace("index.php")
         }
         function CreateAccount() {
-          location.replace("create-account.html")
+          location.replace("create-account.php")
         }
         function SignIn() {
-          location.replace("sign-in.html")
+          location.replace("sign-in.php")
         }
     </script>
 
@@ -56,7 +89,7 @@
           <form class="form-inline my-2 my-lg-0">
             <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
             <button class="btn btn-outline-success mr-sm-4" type="submit">Search</button>
-            <button onclick="CreateAccount()" type="button" class="btn btn-primary mr-sm-2">Create account</button>
+            <button onclick="CreateAccount()" type="button"  class="btn btn-primary mr-sm-2">Create account</button>
             <button onclick="SignIn()" type="button" class="btn btn-outline-primary">Sign in</button>
           </form>
         </div>
@@ -69,20 +102,22 @@
                     <div class="card-body p-5 text-center">
                         <h3 class="mb-5">Create account</h3>
                         <div class="form-outline mb-4">
+                          <form action="" method="post">
                             <label for="inputEmail" class="sr-only">Email address</label>
-                            <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus="">
+                            <input type="email" name="email" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus="">
                         </div>
                         <div class="form-outline mb-4">
                             <label for="inputPassword" class="sr-only">Password</label>
-                            <input type="password" id="inputPassword" class="form-control" placeholder="Password" required="">
+                            <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required="">
                         </div>
                         <div class="form-check d-flex justify-content-start mb-4">
                             <input class="form-check-input" type="checkbox" value="" id="form1Example3" />
                             <label class="form-check-label" for="form1Example3"> Remember password </label>
                         </div>
-                        <button class="btn btn-primary btn-lg btn-block" type="submit">Create</button>
+                        <input class="btn btn-primary btn-lg btn-block" name="submit" type="submit" value="Create">
+                        </form>
                         <hr>
-                        <p>If you have account <a href="sign-in.html">click here...</a></p>
+                        <p>If you have account <a href="sign-in.php">click here...</a></p>
                     </div> 
                 </div>
             </div>
